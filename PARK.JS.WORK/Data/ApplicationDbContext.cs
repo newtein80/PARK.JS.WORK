@@ -7,7 +7,7 @@ using PARK.JS.WORK.Models.ApplicationModel;
 
 namespace PARK.JS.WORK.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, String>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -20,5 +20,7 @@ namespace PARK.JS.WORK.Data
         {
             base.OnModelCreating(builder);
         }
+
+        public DbSet<PARK.JS.WORK.Models.ApplicationModel.ApplicationRole> ApplicationRole { get; set; }
     }
 }

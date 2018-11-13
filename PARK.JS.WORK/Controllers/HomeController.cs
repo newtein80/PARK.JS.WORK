@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using PARK.JS.WORK.Data;
 using PARK.JS.WORK.Models;
+using PARK.JS.WORK.Models.ApplicationModel;
 
 namespace PARK.JS.WORK.Controllers
 {
@@ -25,6 +28,18 @@ namespace PARK.JS.WORK.Controllers
         //    //return View();
         //}
         #endregion
+
+        private readonly RoleManager<ApplicationRole> roleManager;
+
+        public HomeController(RoleManager<ApplicationRole> roleManager)
+        {
+            this.roleManager = roleManager;
+        }
+
+        public async Task<IActionResult> RoleIndex()
+        {
+            return View(await roleManager.Roles.ToListAsync());
+        }
 
         public IActionResult Index()
         {
