@@ -1,0 +1,85 @@
+﻿Data Source=127.0.0.1;Initial Catalog=ParkJongSoo.Core.Tutorial;User ID=sa;Password=#skdlf12;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False
+
+
+==================================================================
+Work : Scaffold-DbContext "Data Source=127.0.0.1;Initial Catalog=ParkJongSoo.Core.Tutorial;User ID=sa;Password=#skdlf12;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models/System -Context "ApplicationDbContext" -table T_COMMON_CODE, T_MENU -Force
+
+
+Home : Scaffold-DbContext "Data Source=PARKJS\\SQLEXPRESS;Initial Catalog=ParkJongSoo.Core.Tutorial;User ID=sa;Password=#skdlf12;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models/SystemViewModel -Context "ApplicationDbContext" -table T_COMMON_CODE, T_MENU -Force
+
+
+-- https://stackoverflow.com/questions/17650482/instance-failure-error-while-connection-string-is-correct
+Scaffold-DbContext "Data Source=PARKJS\\SQLEXPRESS;Initial Catalog=ParkJongSoo.Core.Tutorial;User ID=sa;Password=#skdlf12;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models/Manage -Context "ApplicationDbContext" -table T_ORG_INFO, T_SYSTEM_INFO, T_USER_INFO, T_APPROVAL_MASTER, T_ASSET_INFO -Force
+
+
+
+
+
+Add-Migration -Context ApplicationDbContext AspNetCore_User_Initial_20181106
+
+Add-Migration -Context ApplicationDbContext AspNetCore_User_Add_Column_Change_TName_04
+
+
+Update-Database -Context ApplicationDbContext
+
+
+#region
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using PARK.JONG.SOO.Models.ManageViewModel;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace PARK.JONG.SOO.Data.SeedData
+{
+    public static class UserInfo_SeedData
+    {
+        public static void Initialize(IServiceProvider serviceProvider)
+        {
+            using (var context = new ApplicationDbContext(
+                serviceProvider.GetRequiredService<DbContextOptions<ApplicationDbContext>>()))
+            {
+                // Look for any movies.
+                if (context.TUserInfo.Any())
+                {
+                    return;   // DB has been seeded
+                }
+
+                context.TUserInfo.AddRange(
+                    new TUserInfo
+                    {
+                        AssignedIp = "",
+                        Bunho = "박종수",
+                        ConfirmPassword = "#skdlf12",
+                        CreateDt = DateTime.Now,
+                        CreateUserId = "박종수",
+                        DutyType = "3",
+                        DutytypeName = "담당",
+                        Email = "parkjs@email.com",
+                        JikgupName = "3급",
+                        LastLoginDt = DateTime.Now,
+                        LockYn = "N",
+                        LoginYn = "N",
+                        MenuAuth = "3",
+                        Mobilephone = "010-0100-0100",
+                        OrgCd = "127000",
+                        Password = "#skdlf12",
+                        PwdchangeYn = "N",
+                        SortOrder = 1,
+                        Telephone = "02-222-2222",
+                        UpdateDt = DateTime.Now,
+                        UpdateUserId = "박종수",
+                        UserAuth = "7",
+                        UserName = "박종수이름",
+                        UserType = "U"
+                    }
+
+                );
+                context.SaveChanges();
+            }
+        }
+    }
+}
+#endregion

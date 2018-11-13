@@ -1,0 +1,48 @@
+﻿https://forums.asp.net/t/1953819.aspx?Get+all+user+by+ASP+net+Identity
+
+@model IEnumerable<PARK.JONG.SOO.Models.ApplicationModel.ApplicationUser>
+
+@{
+    ViewData["Title"] = "About";
+}
+<h2>@ViewData["Title"]</h2>
+<h3>@ViewData["Message"]</h3>
+
+<p>https://gldraphael.com/blog/getting-started-with-identity-in-asp-net-core/</p>
+<p>https://www.codeproject.com/Articles/1237650/ASP-NET-Core-User-Role-Base-Dynamic-Menu-Managemen</p>
+<p>https://www.youtube.com/watch?v=GS55DDE3VL0</p>
+
+<div>
+    <table class="table">
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NormalizedEmail)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NormalizedUserName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PhoneNumber)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PhoneNumberConfirmed)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TwoFactorEnabled)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UserName)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
