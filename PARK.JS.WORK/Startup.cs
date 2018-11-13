@@ -13,6 +13,8 @@ using PARK.JS.WORK.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PARK.JS.WORK.Models.ApplicationModel;
+using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace PARK.JS.WORK
 {
@@ -38,11 +40,34 @@ namespace PARK.JS.WORK
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
+
+            // Add ApplicationRole
             //services.AddDefaultIdentity<ApplicationUser>()
             //    .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddIdentity<ApplicationUser, ApplicationRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultTokenProviders();
+                .AddEntityFrameworkStores<ApplicationDbContext>();
+                //.AddDefaultTokenProviders();
+
+            // Add EmailSender
+            //services.AddTransient<IEmailSender, EmailSender>();
+            //services.AddTransient<IEmailSender, EmailSender>(i =>
+            //    new EmailSender(
+            //        Configuration["EmailSender:Host"],
+            //        Configuration.GetValue<int>("EmailSender:Port"),
+            //        Configuration.GetValue<bool>("EmailSender:EnableSSL"),
+            //        Configuration["EmailSender:UserName"],
+            //        Configuration["EmailSender:Password"]
+            //    )
+            //);
+
+            // [Not Used] Areas Routing
+            //services.Configure<RazorViewEngineOptions>(options =>
+            //{
+            //    options.AreaViewLocationFormats.Clear();
+            //    options.AreaViewLocationFormats.Add("/Areas/{2}/Views/{1}/{0}.cshtml");
+            //    options.AreaViewLocationFormats.Add("/Areas/{2}/Views/Shared/{0}.cshtml");
+            //    options.AreaViewLocationFormats.Add("/Views/Shared/{0}.cshtml");
+            //});
 
             // Change Start Page
             //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
@@ -71,8 +96,24 @@ namespace PARK.JS.WORK
 
             app.UseAuthentication();
 
+            // http://taeyo.net/Columns/View.aspx?SEQ=572&PSEQ=40
             app.UseMvc(routes =>
             {
+                // 기본
+                //routes.MapRoute(
+                //    name: "default",
+                //    template: "{controller=Home}/{action=Index}/{id?}");
+
+                // 확장 - Routing
+                //routes.MapRoute(
+                //    name: "areaRoute",
+                //    template: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
+                routes.MapRoute(
+                    name: "areas",
+                    template: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+                );
+
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");

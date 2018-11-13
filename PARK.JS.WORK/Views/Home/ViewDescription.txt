@@ -2,6 +2,11 @@
     ViewData["Title"] = "UserList";
 }
 
+
+@*@Html.Partial("_StatusMessage", Model.StatusMessage)*@
+<partial name="_StatusMessage" model="Model.StatusMessage" />
+
+
 <h2>UserList</h2>
 @model IEnumerable<PARK.JONG.SOO.Models.ApplicationModel.ApplicationUser>
 
