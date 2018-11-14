@@ -15,6 +15,8 @@ using Microsoft.Extensions.DependencyInjection;
 using PARK.JS.WORK.Models.ApplicationModel;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using PARK.JS.WORK.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace PARK.JS.WORK
 {
@@ -45,20 +47,29 @@ namespace PARK.JS.WORK
             //services.AddDefaultIdentity<ApplicationUser>()
             //    .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddIdentity<ApplicationUser, ApplicationRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
-                //.AddDefaultTokenProviders();
+                .AddRoleManager<RoleManager<ApplicationRole>>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultUI()// AccessDenied Page not found : https://forums.asp.net/t/2142001.aspx?ASP+NET+Core+2+1+Can+t+get+role+based+authorisation+to+work
+                .AddDefaultTokenProviders();
 
             // Add EmailSender
-            //services.AddTransient<IEmailSender, EmailSender>();
-            //services.AddTransient<IEmailSender, EmailSender>(i =>
-            //    new EmailSender(
-            //        Configuration["EmailSender:Host"],
-            //        Configuration.GetValue<int>("EmailSender:Port"),
-            //        Configuration.GetValue<bool>("EmailSender:EnableSSL"),
-            //        Configuration["EmailSender:UserName"],
-            //        Configuration["EmailSender:Password"]
-            //    )
-            //);
+            services.AddTransient<IEmailSender, EmailSender>(i =>
+                new EmailSender(
+                    Configuration["EmailSender:Host"],
+                    Configuration.GetValue<int>("EmailSender:Port"),
+                    Configuration.GetValue<bool>("EmailSender:EnableSSL"),
+                    Configuration["EmailSender:UserName"],
+                    Configuration["EmailSender:Password"]
+                )
+            );
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme,
+                options =>
+                {
+                    //options.LoginPath = new PathString("/Account/Login");
+                    options.AccessDeniedPath = new PathString("/Account/AccessDenied");
+                });
 
             // [Not Used] Areas Routing
             //services.Configure<RazorViewEngineOptions>(options =>
@@ -70,10 +81,19 @@ namespace PARK.JS.WORK
             //});
 
             // Change Start Page
-            //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            services.AddMvc().AddRazorPagesOptions(options => {
-                options.Conventions.AddAreaPageRoute("Identity", "/Account/Login", "");
-            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            //services.AddMvc().AddRazorPagesOptions(options =>
+            //{
+            //    options.Conventions.AddAreaPageRoute("Identity", "/Account/Login", "");
+            //}).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+
+            // https://docs.microsoft.com/en-us/aspnet/core/security/authentication/accconfirm?view=aspnetcore-2.1&tabs=visual-studio#enable-account-confirmation-and-password-recovery
+            // requires
+            // using Microsoft.AspNetCore.Identity.UI.Services;
+            // using WebPWrecover.Services;
+            //services.AddSingleton<IEmailSender, EmailSender>();
+            //services.Configure<AuthMessageSenderOptions>(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

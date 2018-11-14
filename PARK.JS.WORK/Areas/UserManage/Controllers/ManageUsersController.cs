@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,7 @@ namespace PARK.JS.WORK.Areas.UserManage.Controllers
 {
     // 컨트롤러의 경우 Area 생성후 Controller 폴더에서 우클릭하여 컨트롤러 추가(빈 컨트롤러)
     [Area("UserManage")]
+    [Authorize(Roles = "Administrator")]
     public class ManageUsersController : ManageUsersControllerBaseController
     {
         private readonly UserManager<ApplicationUser> _userManager;
